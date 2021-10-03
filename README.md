@@ -12,7 +12,7 @@ Hopefully this project might inspire you to build your own react-query library, 
 
 ### useQuery
 
-`useQuery` is a fancy React hook that allows you to deterministically fetch and update data provided by an external source.
+`useQuery` is a fancy React hook that allows you to fetch and update data provided by an external source.
 
 Because `useQuery` is implemented as a react hook, you can use it pretty much anywhere you want in a modern React application - in a function component, inside another hook, inside a Context module, etc.
 
@@ -49,7 +49,7 @@ import { useQuery } from "query";
 useQuery({
   /** (required) endpoint should point to the location of the external data you are retrieving */
   endpoint: "https://randomuser.me/api/",
-  /** (optional) params given here will be stringified and appended to the endpoint on every request */
+  /** (optional) deafult params appended to the endpoint on every request */
   params: {
     nat: "AU,US,NZ",
     inc: "nat,name,location,email,picture",
@@ -74,7 +74,7 @@ useQuery({
 
 ### useQuery state
 
-`useQuery` uses core React APIs under the hood to maintain a state of your external request. Any data or errors that are returned from your external request will be accessible by the values returned from the `useQuery` module
+The payload returned by a `useQuery` hook is referred to as 'state'. Internally, `useQuery` uses core React APIs to maintain state. Any data or errors that are returned from your external request will be accessible by the values returned from the `useQuery` module.
 
 ```js
 import { useQuery } from "query";
@@ -114,7 +114,7 @@ const {
 
 ### useQuery fetch
 
-The `fetch` function returned by a useQuery hook triggers the actual retrieval of your remote data when it is called. This is an asynchronous process, so you should be using this function anywhere else you would normally use a React Hook
+The `fetch` function returned by a useQuery hook triggers the actual retrieval of your remote data when it is called. This is an asynchronous process, so you should be using this function anywhere else you would normally use a React Hook.
 
 > Not a requirement, but I highly recommend using [`eslint-plugin-react-hooks`](https://www.npmjs.com/package/eslint-plugin-react-hooks) if you aren't already
 
@@ -134,7 +134,7 @@ The `fetch` function takes optional parameters to customize the behavior of your
 fetch({
   /**
    * (optional) `params` allows you to pass in params directly to your request utility, which will be
-   *  included with the params already set on your useQuery hook.
+   *  included with the params already set on your useQuery hook - if there are any.
    *
    * This is useful if you set a default param on useQuery, such as a limit param, and have dynamic
    *  params being referenced in an individual fetch by some UI component, such as filters on a table
@@ -166,4 +166,92 @@ fetch({
    * */
   onResponse,
 });
+```
+
+### useQuery with Typescript
+
+`react-query` supports Typescript. When typing a `useQuery` hook, you have to specify two type arguments - `Data` and `Params`. The following is an example of a typed `useQuery` hook.
+
+```js
+const { data, fetch } = useQuery<Data, Params>();
+```
+
+- `Data` will strongly type the payload returned by a successful `useQuery` hook in the `data` attribute, so you can safely access attributes and communicate what values might be available on the payload.
+- `Params` will strongly type the query parameters you can pass into the `params` property of a `fetch` function returned by your `useQuery` hook.
+
+Below is an example of what a full data module might look like if you use `useQuery`, pointing to the API https://randomuser.me
+
+```js
+import { useEffect } from "react";
+import { useQuery } from "@evenstephenr/react-query";
+
+type Params = {
+  results?: number;
+  seed?: string;
+  inc?: string;
+  nat?: 'us';
+}
+
+type Data = {
+  info: {
+    page: number;
+    results: number;
+    seed: string;
+    version: string;
+  },
+  results: {
+    name: {
+      title: string;
+      first: string;
+      last: string;
+    };
+    dob: {
+      date: string;
+      age: number;
+    }
+    email: string;
+    cell: string;
+    id: {
+      name: string;
+      value: string;
+    };
+  }[];
+}
+
+/** wrapping useQuery in a hook **/
+export const useUsers = () => {
+  return useQuery<Data, Params>({
+    endpoint: "https://randomuser.me/api/",
+    withCache: 'randomuser-demo'
+  });
+};
+
+/** a component using a useQuery hook **/
+export function Users() {
+  const { data, error, fetch } = useUsers();
+
+  useEffect(() => {
+    fetch({
+      params: {
+        results: 10,
+        seed: 'randomseed',
+        nat: 'us',
+        inc: 'name,email,dob,cell,id'
+      }
+    });
+  }, [fetch]);
+
+  useEffect(() => {
+    if (data) {
+      console.log(data.results.map(d => `${d.name.first} ${d.name.last}, ${d.dob.age}`))
+    }
+  }, [data]);
+
+  return (
+    <>
+      {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
+      {error && <>{error}</>}
+    </>
+  );
+}
 ```

@@ -1,0 +1,50 @@
+{
+  "name": "@evenstephenr/react-query",
+  "version": "0.0.1",
+  "description": "react-query hook, a rough interpretation of Tanner Linsley's react-query hook",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "jest",
+    "test-watch": "jest --watchAll",
+    "build": "webpack",
+    "prep-patch": "npm version patch && npm run test && npm run build",
+    "prep-minor": "npm version minor && npm run test && npm run build",
+    "prep-major": "npm version major && npm run test && npm run build"
+  },
+  "keywords": [
+    "react",
+    "context",
+    "state"
+  ],
+  "author": "Stephen J. Ramirez",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "peerDependencies": {
+    "react": "^17.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.15.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.1.1",
+    "@types/react": "^17.0.26",
+    "babel-jest": "^27.2.4",
+    "babel-loader": "^8.2.2",
+    "jest": "^27.2.4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "ts-jest": "^27.0.5",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.4.3",
+    "webpack": "^5.56.0",
+    "webpack-cli": "^4.8.0"
+  }
+}

@@ -14,7 +14,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(jsx|js)$/,
+        test: /\.(jsx|js|tsx|ts)$/,
         include: path.resolve(__dirname, 'src'),
         use: [{
           loader: 'babel-loader',
@@ -23,15 +23,11 @@ module.exports = {
               ['@babel/preset-env', {
                 'targets': 'defaults' 
               }],
-              '@babel/preset-react'
+              '@babel/preset-react',
+              "@babel/preset-typescript"
             ]
           }
         }]
-      },
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        include: path.resolve(__dirname, 'src'),
       },
     ]
   }

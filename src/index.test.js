@@ -1,7 +1,11 @@
 import React from 'react';
+import fetch from 'node-fetch';
 
 import {render} from '@testing-library/react'
+import { renderHook, act } from '@testing-library/react-hooks'
 import '@testing-library/jest-dom'
+
+globalThis.fetch = fetch
 
 import { useQuery, useQueryReducer, ACTION } from '.';
 
@@ -104,4 +108,48 @@ test('useQueryReducer ACTION.ERROR', () => {
     url: 'test_url_from_data',
     params:  { param1: 'test' }
   });
+});
+
+test('useQuery - GET /user - with params', async () => {
+  const { result, waitForNextUpdate } = renderHook(() => useQuery({
+    endpoint: 'https://api.backend.dev/user',
+  }));
+
+  act(() => {
+    result.current.fetch({ params: { 'limit': 10, 'countryCode': 'US' }});
+  });
+
+  expect(result.current.isLoading).toEqual(true);
+  expect(result.current.endpoint).toEqual('https://api.backend.dev/user');
+  expect(result.current.url).toEqual('https://api.backend.dev/user?limit=10&countryCode=US');
+  expect(result.current.fetch).toBeDefined();
+
+  await waitForNextUpdate();
+
+  expect(result.current.isLoading).toEqual(false);
+  expect(result.current.error).toBeUndefined();
+  expect(result.current.errorCode).toBeUndefined();
+  expect(result.current.data).toEqual({ username: 'randomuser' })
+});
+
+test('useQuery - GET /user-error', async () => {
+  const { result, waitForNextUpdate } = renderHook(() => useQuery({
+    endpoint: 'https://api.backend.dev/user-error',
+  }));
+
+  act(() => {
+    result.current.fetch();
+  });
+
+  expect(result.current.isLoading).toEqual(true);
+  expect(result.current.endpoint).toEqual('https://api.backend.dev/user-error');
+  expect(result.current.url).toEqual('https://api.backend.dev/user-error?');
+  expect(result.current.fetch).toBeDefined();
+
+  await waitForNextUpdate();
+
+  expect(result.current.isLoading).toEqual(false);
+  expect(result.current.error).toEqual('bad request');
+  expect(result.current.errorCode).toEqual(500);
+  expect(result.current.data).toBeUndefined();
 });

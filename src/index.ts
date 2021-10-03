@@ -1,7 +1,8 @@
 import { useReducer, useCallback, Dispatch } from "react";
 
 const URLformat = ({ query }: { query: { [k: string]: string } }) => {
-  return '?' + new URLSearchParams(query).toString();
+  const queryString = new URLSearchParams(query).toString();
+  return queryString.length > 0 ? `?${queryString}` : '';
 };
 
 const mergeRequestOptions = (

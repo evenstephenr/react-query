@@ -143,7 +143,7 @@ test('useQuery - GET /user-error', async () => {
 
   expect(result.current.isLoading).toEqual(true);
   expect(result.current.endpoint).toEqual('https://api.backend.dev/user-error');
-  expect(result.current.url).toEqual('https://api.backend.dev/user-error?');
+  expect(result.current.url).toEqual('https://api.backend.dev/user-error');
   expect(result.current.fetch).toBeDefined();
 
   await waitForNextUpdate();

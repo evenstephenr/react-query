@@ -9,7 +9,8 @@
   "scripts": {
     "test": "jest",
     "test-watch": "jest --watchAll",
-    "build": "webpack",
+    "clean": "rm -rf ./dist",
+    "build": "npm run clean && tsc src/index.ts --declaration --outdir dist/ && webpack",
     "prep": "npm run test && npm run build",
     "prep-patch": "npm run prep && npm version patch",
     "prep-minor": "npm run prep && npm version minor",

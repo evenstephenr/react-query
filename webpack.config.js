@@ -1,18 +1,18 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   target: 'web',
   entry: './src/index.ts',
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'index.js',
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'commonjs'
   },
   externals: {
-    react: "commonjs react",
-    "react-dom": "commonjs react-dom",
-  },
+  react: "commonjs react",
+  "react-dom": "commonjs react-dom",
+},
   module: {
     rules: [
       {

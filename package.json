@@ -1,6 +1,6 @@
 {
   "name": "@evenstephenr/react-query",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "react-query hook, a rough interpretation of Tanner Linsley's react-query hook",
   "main": "dist/index.js",
   "files": [

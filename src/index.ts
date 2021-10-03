@@ -107,7 +107,7 @@ type QueryState<Data, Params> = {
  * ex:
  *  type FetchSomeType = QueryFetch<{ data: SomeType }, {}>;
  */
-export type QueryFetch<Data, Params> = (config?: {
+type QueryFetch<Data, Params> = (config?: {
   params?: Params;
   options?: RequestInit;
   /**
@@ -146,7 +146,7 @@ type QueryResult<Data, Params> = QueryState<Data, Params> & {
    */
   dispatch: Dispatch<QueryActions<Data, Params>>;
 };
-export enum ACTION {
+enum ACTION {
   RESET = "reset",
   REFRESH = "refresh",
   SUCCESS = "success",
@@ -170,7 +170,7 @@ type QueryActions<D, P> =
   | REFRESH_ACTION<P>
   | SUCCESS_ACTION<D>
   | ERROR_ACTION;
-export function useQueryReducer<Data, Params>(
+function useQueryReducer<Data, Params>(
   state: QueryState<Data, Params>,
   action: QueryActions<Data, Params>
 ): QueryState<Data, Params> {
@@ -218,7 +218,7 @@ export function useQueryReducer<Data, Params>(
  *  2. typing the values returned from external resources
  *  3. typing the optional query parameters available on an external resource
  */
-export function useQuery<D, P>({
+function useQuery<D, P>({
   endpoint,
   withCache,
   params,
@@ -343,3 +343,10 @@ export function useQuery<D, P>({
     // reset,
   };
 }
+
+export {
+  useQuery,
+  useQueryReducer,
+  ACTION,
+  QueryFetch
+};

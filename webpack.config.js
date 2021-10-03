@@ -3,14 +3,11 @@ const path = require('path');
 module.exports = {
   mode: 'production',
   target: 'web',
-  entry: './src/index.js',
+  entry: './src/index.ts',
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'index.js',
     libraryTarget: 'umd'
-  },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
   },
   module: {
     rules: [
